@@ -4,10 +4,10 @@ use std::{fs::File, io::Write};
 
 use crate::maze::{Direction, Maze};
 
-pub fn save_maze(maze: &Maze, path: &Path, target_size: u32) -> Result<(), std::io::Error> {
+pub fn save_maze(maze: &Maze, path: &Path, target_image_size: u32) -> Result<(), std::io::Error> {
     let unscaled_image_width = maze.get_width() * 2 + 1;
     let unscaled_image_height = maze.get_height() * 2 + 1;
-    let scale = (target_size / unscaled_image_width.max(unscaled_image_height)).max(1);
+    let scale = (target_image_size / unscaled_image_width.max(unscaled_image_height)).max(1);
     let file = File::create(path)?;
     let mut encoder = png::Encoder::new(
         BufWriter::new(file),
@@ -104,6 +104,7 @@ impl<'a, W: Write> BitWriter<'a, W> {
     fn flush(&mut self) -> Result<(), std::io::Error> {
         if self.bits_written > 0 {
             self.writer.write_all(&self.buffer)?;
+            self.buffer[0] = 0;
             self.bits_written = 0;
         }
         Ok(())
