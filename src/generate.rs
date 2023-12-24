@@ -149,10 +149,11 @@ impl Maze {
 }
 
 fn choose_random_border_cell(width: u32, height: u32, rng: &mut dyn RngCore) -> (u32, u32) {
+    assert!(width > 0 && height > 0);
     match (width, height) {
         (1, 1) => (0, 0),
-        (2, 1) => (rng.gen_range(0..=1), 0),
-        (1, 2) => (0, rng.gen_range(0..=1)),
+        (w, 1) => (rng.gen_range(0..w), 0),
+        (1, h) => (0, rng.gen_range(0..h)),
         _ => {
             if random::<bool>() {
                 if random::<bool>() {
